@@ -3,123 +3,123 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace buoi1.Migrations
+namespace WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class tenmoi : Migration
+    public partial class InitialDatabaseMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Author",
+                name: "Authors",
                 columns: table => new
                 {
-                    AuthorID = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Author", x => x.AuthorID);
+                    table.PrimaryKey("PK_Authors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Publisher",
+                name: "Publishers",
                 columns: table => new
                 {
-                    PublisherID = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Publisher", x => x.PublisherID);
+                    table.PrimaryKey("PK_Publishers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Book",
+                name: "Books",
                 columns: table => new
                 {
-                    BookID = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsRead = table.Column<bool>(type: "bit", nullable: true),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
                     DateRead = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Rate = table.Column<int>(type: "int", nullable: false),
+                    Rate = table.Column<int>(type: "int", nullable: true),
                     Genre = table.Column<int>(type: "int", nullable: false),
                     CoverUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateAdded = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PublisherID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Book", x => x.BookID);
+                    table.PrimaryKey("PK_Books", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Book_Publisher_PublisherID",
+                        name: "FK_Books_Publishers_PublisherID",
                         column: x => x.PublisherID,
-                        principalTable: "Publisher",
-                        principalColumn: "PublisherID",
+                        principalTable: "Publishers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Book_Author",
+                name: "Books_Authors",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BookID = table.Column<int>(type: "int", nullable: false),
-                    AuthorID = table.Column<int>(type: "int", nullable: false)
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    AuthorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Book_Author", x => x.ID);
+                    table.PrimaryKey("PK_Books_Authors", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Book_Author_Author_AuthorID",
-                        column: x => x.AuthorID,
-                        principalTable: "Author",
-                        principalColumn: "AuthorID",
+                        name: "FK_Books_Authors_Authors_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Authors",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Book_Author_Book_BookID",
-                        column: x => x.BookID,
-                        principalTable: "Book",
-                        principalColumn: "BookID",
+                        name: "FK_Books_Authors_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Book_PublisherID",
-                table: "Book",
+                name: "IX_Books_PublisherID",
+                table: "Books",
                 column: "PublisherID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Book_Author_AuthorID",
-                table: "Book_Author",
-                column: "AuthorID");
+                name: "IX_Books_Authors_AuthorId",
+                table: "Books_Authors",
+                column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Book_Author_BookID",
-                table: "Book_Author",
-                column: "BookID");
+                name: "IX_Books_Authors_BookId",
+                table: "Books_Authors",
+                column: "BookId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Book_Author");
+                name: "Books_Authors");
 
             migrationBuilder.DropTable(
-                name: "Author");
+                name: "Authors");
 
             migrationBuilder.DropTable(
-                name: "Book");
+                name: "Books");
 
             migrationBuilder.DropTable(
-                name: "Publisher");
+                name: "Publishers");
         }
     }
 }

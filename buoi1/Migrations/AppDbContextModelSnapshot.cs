@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using buoi1.Data;
+using WebAPI.Data;
 
 #nullable disable
 
-namespace buoi1.Migrations
+namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -22,23 +22,24 @@ namespace buoi1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("buoi1.Models.Authors", b =>
+            modelBuilder.Entity("WebAPI.Models.Domain.Authors", b =>
                 {
-                    b.Property<int>("AuthorID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuthorID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FullName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AuthorID");
+                    b.HasKey("Id");
 
-                    b.ToTable("Author");
+                    b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("buoi1.Models.Book_Author", b =>
+            modelBuilder.Entity("WebAPI.Models.Domain.Book_Author", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -46,34 +47,34 @@ namespace buoi1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("AuthorID")
+                    b.Property<int>("AuthorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BookID")
+                    b.Property<int>("BookId")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AuthorID");
+                    b.HasIndex("AuthorId");
 
-                    b.HasIndex("BookID");
+                    b.HasIndex("BookId");
 
-                    b.ToTable("Book_Author");
+                    b.ToTable("Books_Authors");
                 });
 
-            modelBuilder.Entity("buoi1.Models.Books", b =>
+            modelBuilder.Entity("WebAPI.Models.Domain.Books", b =>
                 {
-                    b.Property<int>("BookID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CoverUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DateAdded")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateRead")
                         .HasColumnType("datetime2");
@@ -84,52 +85,53 @@ namespace buoi1.Migrations
                     b.Property<int>("Genre")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsRead")
+                    b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
                     b.Property<int>("PublisherID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Rate")
+                    b.Property<int?>("Rate")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("BookID");
+                    b.HasKey("Id");
 
                     b.HasIndex("PublisherID");
 
-                    b.ToTable("Book");
+                    b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("buoi1.Models.Publishers", b =>
+            modelBuilder.Entity("WebAPI.Models.Domain.Publishers", b =>
                 {
-                    b.Property<int>("PublisherID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PublisherID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PublisherID");
+                    b.HasKey("Id");
 
-                    b.ToTable("Publisher");
+                    b.ToTable("Publishers");
                 });
 
-            modelBuilder.Entity("buoi1.Models.Book_Author", b =>
+            modelBuilder.Entity("WebAPI.Models.Domain.Book_Author", b =>
                 {
-                    b.HasOne("buoi1.Models.Authors", "Author")
+                    b.HasOne("WebAPI.Models.Domain.Authors", "Author")
                         .WithMany("Book_Authors")
-                        .HasForeignKey("AuthorID")
+                        .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("buoi1.Models.Books", "Book")
+                    b.HasOne("WebAPI.Models.Domain.Books", "Book")
                         .WithMany("Book_Authors")
-                        .HasForeignKey("BookID")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -138,10 +140,10 @@ namespace buoi1.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("buoi1.Models.Books", b =>
+            modelBuilder.Entity("WebAPI.Models.Domain.Books", b =>
                 {
-                    b.HasOne("buoi1.Models.Publishers", "Publisher")
-                        .WithMany("Book")
+                    b.HasOne("WebAPI.Models.Domain.Publishers", "Publisher")
+                        .WithMany("Books")
                         .HasForeignKey("PublisherID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -149,19 +151,19 @@ namespace buoi1.Migrations
                     b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("buoi1.Models.Authors", b =>
+            modelBuilder.Entity("WebAPI.Models.Domain.Authors", b =>
                 {
                     b.Navigation("Book_Authors");
                 });
 
-            modelBuilder.Entity("buoi1.Models.Books", b =>
+            modelBuilder.Entity("WebAPI.Models.Domain.Books", b =>
                 {
                     b.Navigation("Book_Authors");
                 });
 
-            modelBuilder.Entity("buoi1.Models.Publishers", b =>
+            modelBuilder.Entity("WebAPI.Models.Domain.Publishers", b =>
                 {
-                    b.Navigation("Book");
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }
