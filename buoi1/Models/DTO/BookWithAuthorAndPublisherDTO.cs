@@ -1,8 +1,6 @@
-﻿using WebAPI.Models.Domain;
-
-namespace WebAPI.Models.DTO
+﻿namespace WebAPI.Models.DTO
 {
-    public class AddBookRequestDTO
+    public class BookWithAuthorAndPublisherDTO
     {
         public int Id { get; set; }
         public string? Title { get; set; }
@@ -12,10 +10,8 @@ namespace WebAPI.Models.DTO
         public string? Genre { get; set; }
         public string? CoverUrl { get; set; }
         public DateTime DateAdded { get; set; }
-        
-        //navigation properties -
-        public int PublisherID { get; set; }
-        public List<int> AuthorIds { get; set; }
+        public string PublisherName { get; set; }
+        public List<string> AuthorNames { get; set; }
         public string? Description { get; set; }
     }
 }
